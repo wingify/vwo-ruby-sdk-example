@@ -13,7 +13,7 @@ class VWO
     # @param[String]        :user_id            ID for user whose storage needs to be retrieved.
     # @return[Hash]         :user_storage_obj   Object representing the user's storage.
     #
-    def get(user_id)
+    def get(user_id, campaign_key = nil)
       # example code to fetch it from DB column
       @@user_storage[user_id]
     end
@@ -24,7 +24,7 @@ class VWO
     #
     def set(user_storage_obj)
       # example code to save it in DB
-      @@user_storage[user_storage_obj[:userId]] = user_storage_obj
+      @@user_storage[user_storage_obj['user_id']] = user_storage_obj
     end
   end
 end
