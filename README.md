@@ -14,7 +14,7 @@ Refer [VWO Official Server-side Documentation](https://developers.vwo.com/refere
 
 1. Install dependencies
 
-```
+```bash
 # Assuming ruby is installed
 gem install bundler (sudo if required)
 bundle install
@@ -31,7 +31,7 @@ bundle install
 
 3. Run application
 
-```
+```bash
 ruby server.rb
 
 # Hot Reloading app
@@ -71,22 +71,22 @@ vwo_client_instance.track(campaign_test_key, user_id', goal_identified, revenue_
 
 Override Existing Logging
 
-    ```
-    class VWO
-      class Logger
-        def initialize(logger_instance)
-          # Only log info logs and above, no debug
-          @@logger_instance = logger_instance || Logger.new(STDOUT, level: :info)
-        end
-
-        def log(level, message)
-          # Basic Modification
-          message = "#{Time.now} #{message}"
-          @@logger_instance.log(level, message)
-        end
-      end
+```ruby
+class VWO
+  class Logger
+    def initialize(logger_instance)
+      # Only log info logs and above, no debug
+      @@logger_instance = logger_instance || Logger.new(STDOUT, level: :info)
     end
-    ```
+
+    def log(level, message)
+      # Basic Modification
+      message = "#{Time.now} #{message}"
+      @@logger_instance.log(level, message)
+    end
+  end
+end
+```
 
 ***Note*** - Make sure your custom logger instance has `log` method which takes `(level, message)` as arguments.
 
@@ -94,39 +94,39 @@ Override Existing Logging
 
 To store a user you can override UserStorage methods. i.e -
 
-    ```
-    class VWO
-      # Abstract class encapsulating user storage service functionality.
-      # Override with your own implementation for storing
-      # And retrieving the user storage.
+```ruby
+class VWO
+  # Abstract class encapsulating user storage service functionality.
+  # Override with your own implementation for storing
+  # And retrieving the user storage.
 
-      class UserStorage
+  class UserStorage
 
-        # Abstract method, must be defined to fetch the
-        # User storage dict corresponding to the user_id.
-        #
-        # @param[String]        :user_id            ID for user whose storage needs to be retrieved.
-        # @return[Hash]         :user_storage_obj   Object representing the user's storage.
-        #
-        def get(user_id)
-          # example code to fetch it from DB column
-          JSON.parse(User.find_by(vwo_id: user_id).vwo_user)
-        end
-
-        # Abstract method, must be to defined to save
-        # The user storage dict sent to this method.
-        # @param[Hash]    :user_storage_obj     Object representing the user's storage.
-        #
-        def set(user_storage_obj)
-            # example code to save it in DB
-           User.update_attributes(vwo_id: user_storage_obj.userId, vwo_user: JSON.generate(user_storage_obj))
-        end
-      end
+    # Abstract method, must be defined to fetch the
+    # User storage dict corresponding to the user_id.
+    #
+    # @param[String]        :user_id            ID for user whose storage needs to be retrieved.
+    # @return[Hash]         :user_storage_obj   Object representing the user's storage.
+    #
+    def get(user_id)
+      # example code to fetch it from DB column
+      JSON.parse(User.find_by(vwo_id: user_id).vwo_user)
     end
 
-    # Now use it to initiate VWO client instance
-    vwo_client_instance = VWO.new(account_id, sdk_key, custom_logger, UserStorage.new)
-    ```
+    # Abstract method, must be to defined to save
+    # The user storage dict sent to this method.
+    # @param[Hash]    :user_storage_obj     Object representing the user's storage.
+    #
+    def set(user_storage_obj)
+        # example code to save it in DB
+        User.update_attributes(vwo_id: user_storage_obj.userId, vwo_user: JSON.generate(user_storage_obj))
+    end
+  end
+end
+
+# Now use it to initiate VWO client instance
+vwo_client_instance = VWO.new(account_id, sdk_key, custom_logger, UserStorage.new)
+```
 
 ### License
 
