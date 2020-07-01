@@ -8,7 +8,7 @@ This repository provides a basic demo of how server-side works with VWO Ruby SDK
 
 ### Documentation
 
-Refer [VWO Official Server-side Documentation](https://developers.vwo.com/reference#server-side-introduction)
+Refer [VWO Official Server-side Documentation](https://developers.vwo.com/reference#fullstack-introduction)
 
 ### Setup
 
