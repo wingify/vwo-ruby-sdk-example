@@ -1,6 +1,25 @@
 {
   "account_id": "",
   "sdk_key": "",
-  "ab_test_campaign_key": "",
-  "ab_test_campaign_goal": ""
+  "ab_campaign_key": "",
+  "ab_campaign_goal_identifier": "",
+  "ab_revenue_value":0,
+  "ab_custom_variables": {},
+
+  "feature_rollout_campaign_key": "",
+  "feature_rollout_custom_variables": {},
+
+  "feature_test_campaign_key": "",
+  "feature_test_goal_identifier" : "",
+  "feature_test_revenue_value":0,
+  "feature_test_custom_variables": {},
+  "string_variable_key" : "",
+  "integer_variable_key" : "",
+  "double_variable_key" : "",
+  "boolean_variable_key" : "",
+
+  "tag_key" : "",
+  "tag_value" : "",
+
+  "webhook_auth_key": ""
 }
