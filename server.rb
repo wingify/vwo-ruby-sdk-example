@@ -92,7 +92,7 @@ get '/basic_example' do
   ab_campaign_goal_identifier = params['ab_campaign_goal_identifier']
 
   variation_name = $vwo_client_instance.activate(ab_campaign_key, user_id)
-  $vwo_client_instance.track(ab_campaign_key, user_id, ab_campaign_goal_identifier, revenue_value)
+  $vwo_client_instance.track(ab_campaign_key, user_id, ab_campaign_goal_identifier, {revenue_value: revenue_value})
 
   erb :template, locals: {
     part_of_campaign: variation_name.nil? ? 'No' : 'Yes',
@@ -113,7 +113,7 @@ get '/logger' do
   ab_campaign_goal_identifier = params['ab_campaign_goal_identifier']
 
   variation_name = $vwo_client_instance.activate(ab_campaign_key, user_id)
-  $vwo_client_instance.track(ab_campaign_key, user_id, ab_campaign_goal_identifier, revenue_value)
+  $vwo_client_instance.track(ab_campaign_key, user_id, ab_campaign_goal_identifier, {revenue_value: revenue_value})
 
   stop_logger
   erb :template, locals: {
@@ -133,7 +133,7 @@ get '/user_storage' do
   revenue_value = params['revenue'].to_i
   ab_campaign_goal_identifier = params['ab_campaign_goal_identifier']
   variation_name = $vwo_client_instance.activate(ab_campaign_key, user_id)
-  $vwo_client_instance.track(ab_campaign_key, user_id, ab_campaign_goal_identifier, revenue_value)
+  $vwo_client_instance.track(ab_campaign_key, user_id, ab_campaign_goal_identifier, {revenue_value: revenue_value})
   erb :template, locals: {
     part_of_campaign: variation_name.nil? ? 'No' : 'Yes',
     variation_name: variation_name,
@@ -146,9 +146,9 @@ end
 
 get '/ab' do
   user_id = params['userId'] || USERS.sample
-  variation_name = $vwo_client_instance_user_storage.activate(config["ab_campaign_key"], user_id, { custom_variables: config["ab_custom_variables"] })
+  variation_name = $vwo_client_instance.activate(config["ab_campaign_key"], user_id, { custom_variables: config["ab_custom_variables"] })
   is_part_of_campaign = !variation_name.nil?
-  $vwo_client_instance_user_storage.track(config["ab_campaign_key"], user_id, config["ab_campaign_goal_identifier"], { revenue_value: config["ab_custom_variables"] })
+  $vwo_client_instance.track(config["ab_campaign_key"], user_id, config["ab_campaign_goal_identifier"], { custom_variables: config["ab_custom_variables"] })
   erb :ab, locals: {
     user_id: user_id,
     campaign_type: "Visual-AB",
@@ -197,8 +197,10 @@ get '/feature-test' do
     config["feature_test_campaign_key"],
     user_id,
     config["feature_test_goal_identifier"],
-    revenue_value=config['feature_test_revenue_value'],
-    custom_variables=config['feature_test_custom_variables']
+    {
+        revenue_value: config['feature_test_revenue_value'],
+        custom_variables: config['feature_test_custom_variables']
+    }
   )
 
   string_variable = $vwo_client_instance.get_feature_variable_value(config["feature_test_campaign_key"], config['string_variable_key'], user_id, { custom_variables: config['feature_test_custom_variables'] })
